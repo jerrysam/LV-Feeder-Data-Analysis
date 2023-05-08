@@ -5,277 +5,89 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Feeder Data Chart</title>
     <script src="https://d3js.org/d3.v6.min.js"></script>
-    <style>
-        .chart {
-            display: inline-block;
-            position: relative;
-            width: 100%;
-            padding-bottom: 100%;
-            vertical-align: middle;
-            overflow: hidden;
-        }
-        #values span {
-            margin-right: 10px;
-        }
-        div {
-            padding: 5px;
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div>
-        <label for="csvFile">Select CSV File:</label>
-        <select id="csvFile">
-            <!-- <option value="720512 - CHARTERHOUSE DRIVE - SOLIHULL.csv">720512 - CHARTERHOUSE DRIVE - SOLIHULL.csv</options> -->
-            <!-- <option value="721030 - Chestnut Drive - Cofton Hackett.csv">721030 - Chestnut Drive - Cofton Hackett.csv</options> -->
-            <option value="721032 - Lickey Coppice - Barnt Green.csv">721032 - Lickey Coppice - Barnt Green.csv</options>
-            <option value="721033 - Parsonage Drive - Cofton Hackett.csv">721033 - Parsonage Drive - Cofton Hackett.csv</options>
-            <option value="721035 - Reservoir Road - Barnt Green.csv">721035 - Reservoir Road - Barnt Green.csv</options>
-            <option value="721187 - REDBROOKS - HILLFIELD SOLIHULL.csv">721187 - REDBROOKS - HILLFIELD SOLIHULL.csv</options>
-            <option value="721372 - Warren Lane, Lickey Square - Barnt Green.csv">721372 - Warren Lane, Lickey Square - Barnt Green.csv</options>
-            <option value="721416 - 41 LITTLE HARDWICK RD - ALDRIDGE.csv">721416 - 41 LITTLE HARDWICK RD - ALDRIDGE.csv</options>
-            <option value="721448 - VERNON AVENUE - HANDSWORTHWOOD 50C1.csv">721448 - VERNON AVENUE - HANDSWORTHWOOD 50C1.csv</options>
-            <option value="721676 - STATION RD - HARBORNE.csv">721676 - STATION RD - HARBORNE.csv</options>
-            <option value="721683 - ANSTRUTHER RD - EDGBASTON.csv">721683 - ANSTRUTHER RD - EDGBASTON.csv</options>
-            <option value="721747 - Monmouth Road West - Smethwick.csv">721747 - Monmouth Road West - Smethwick.csv</options>
-            <option value="721767 - COURT OAK RD - HARBORNE.csv">721767 - COURT OAK RD - HARBORNE.csv</options>
-            <option value="721810 - HOGARTH HOUSE.csv">721810 - HOGARTH HOUSE.csv</options>
-            <option value="722039 - BANNERS GATE ROAD - NEW OSCOTT 411E.csv">722039 - BANNERS GATE ROAD - NEW OSCOTT 411E.csv</options>
-            <option value="722466 - Middle Leaford - Stechford.csv">722466 - Middle Leaford - Stechford.csv</options>
-            <option value="722468 - TURCHILL DRIVE - WALMLEY.csv">722468 - TURCHILL DRIVE - WALMLEY.csv</options>
-            <option value="722486 - 7 WHITECROFT ROAD - SHELDON.csv">722486 - 7 WHITECROFT ROAD - SHELDON.csv</options>
-            <option value="722549 - HIGHFIELD ROAD (EAST) - HALL GREEN.csv">722549 - HIGHFIELD ROAD (EAST) - HALL GREEN.csv</options>
-            <option value="722578 - ALCOTT LANE - MARSTON GREEN.csv">722578 - ALCOTT LANE - MARSTON GREEN.csv</options>
-            <option value="722712 - Hawksworth Crescent.csv">722712 - Hawksworth Crescent.csv</options>
-            <option value="722739 - 20 DENHAM ROAD - YARDLEY.csv">722739 - 20 DENHAM ROAD - YARDLEY.csv</options>
-            <option value="722936 - Berwicks Lane - Marston Green.csv">722936 - Berwicks Lane - Marston Green.csv</options>
-            <option value="723003 - MARSTON GREEN HOSPITAL - MARSTON GREEN.csv">723003 - MARSTON GREEN HOSPITAL - MARSTON GREEN.csv</options>
-            <option value="723349 - BROOK LANE - OLTON.csv">723349 - BROOK LANE - OLTON.csv</options>
-            <option value="723577 - Aylesford Drive - Marston Green.csv">723577 - Aylesford Drive - Marston Green.csv</options>
-            <option value="723621 - JOCKEY RD BRIDGE - BOLDMERE 41F2.csv">723621 - JOCKEY RD BRIDGE - BOLDMERE 41F2.csv</options>
-            <option value="723879 - MARYLAND AVE - SHARD END 66B1.csv">723879 - MARYLAND AVE - SHARD END 66B1.csv</options>
-            <option value="724023 - HARBORNE ROAD - EDGBASTON.csv">724023 - HARBORNE ROAD - EDGBASTON.csv</options>
-            <option value="724025 - BERROW DRIVE - EDGBASTON.csv">724025 - BERROW DRIVE - EDGBASTON.csv</options>
-            <option value="724095 - Balden Road - Quinton.csv">724095 - Balden Road - Quinton.csv</options>
-            <option value="724128 - NURSERY ROAD - HARBORNE.csv">724128 - NURSERY ROAD - HARBORNE.csv</options>
-            <option value="724253 - LEIGHAM DRIVE -.csv">724253 - LEIGHAM DRIVE -.csv</options>
-            <option value="724274 - KNIGHTLOW ROAD - HARBORNE.csv">724274 - KNIGHTLOW ROAD - HARBORNE.csv</options>
-            <option value="724374 - GREENFIELD CRESCENT - EDGBASTON.csv">724374 - GREENFIELD CRESCENT - EDGBASTON.csv</options>
-            <option value="724700 - MEADOW ROAD - EDGBASTON.csv">724700 - MEADOW ROAD - EDGBASTON.csv</options>
-            <option value="724706 - Augustus Road - Edgbaston.csv">724706 - Augustus Road - Edgbaston.csv</options>
-            <option value="724812 - Pakenham Rd - Edgbaston.csv">724812 - Pakenham Rd - Edgbaston.csv</options>
-            <option value="724813 - CHARLOTTE ROAD - EDGBASTON.csv">724813 - CHARLOTTE ROAD - EDGBASTON.csv</options>
-            <option value="724814 - GILLHURST ROAD -.csv">724814 - GILLHURST ROAD -.csv</options>
-            <option value="730202 - 55 MILESTONE DRIVE - WEST HAGLEY.csv">730202 - 55 MILESTONE DRIVE - WEST HAGLEY.csv</options>
-            <option value="730234 - HARTLE LANE - BELBROUGHTON.csv">730234 - HARTLE LANE - BELBROUGHTON.csv</options>
-            <option value="730238 - CAVENDISH DRIVE - WEST HAGLEY.csv">730238 - CAVENDISH DRIVE - WEST HAGLEY.csv</options>
-            <option value="730499 - BEDINGSTONE DRIVE - PENKRIDGE.csv">730499 - BEDINGSTONE DRIVE - PENKRIDGE.csv</options>
-            <option value="730719 - MELLISH ROAD - WALSALL.csv">730719 - MELLISH ROAD - WALSALL.csv</options>
-            <option value="730789 - RICHARD RD - WALSALL.csv">730789 - RICHARD RD - WALSALL.csv</options>
-            <option value="730844 - PEAR TREE DRIVE - GREAT BARR.csv">730844 - PEAR TREE DRIVE - GREAT BARR.csv</options>
-            <option value="730870 - FERNLEIGH ROAD - WALSALL.csv">730870 - FERNLEIGH ROAD - WALSALL.csv</options>
-            <option value="730873 - PRINCESS AVENUE - WALSALL.csv">730873 - PRINCESS AVENUE - WALSALL.csv</options>
-            <option value="731018 - GREENACRES - SHELFIELD.csv">731018 - GREENACRES - SHELFIELD.csv</options>
-            <option value="731054 - ST MODWENA WAY - PENKRIDGE.csv">731054 - ST MODWENA WAY - PENKRIDGE.csv</options>
-        </select>
+        <h1>Peak shifting EVs and Heat pumps</h1>
     </div>
     <div>
-        <label for="description">Select Description:</label>
+        <h2>Analysing load profile of 11kv transformers, with 2 growth projections</h2>
+        <p>As the UK works towards its Net Zero plans, we will replace fossil fuels with renewable electricity, causing a 2x - 3x increase in electricity consumption. This is an unprecedented growth in an electricity grid that has been static (sometimes declining) in load for the past 50 years, and something that the grid is not well prepared for.</p>
+        <p>Electric space and water heating will drive a 100% increase in household electricity consumption, and Electric cars will drive a 50% increase. These two large loads have some flexibility in when they're used, and the below analysis explores how much we can benefit from exploiting the thermal and electrical storage of these two large loads.</p>
+    </div>
+    <div class="chart" id="chart"></div>
+    
+
+    <div>
+        <label for="csvFile"><b>Select one of 50 substations:</b></label>
+        <select id="csvFile">
+            <option value="processeddata/721032 - Lickey Coppice - Barnt Green.csv">721032 - Lickey Coppice - Barnt Green.csv</options>
+            <option value="processeddata/721033 - Parsonage Drive - Cofton Hackett.csv">721033 - Parsonage Drive - Cofton Hackett.csv</options>
+            <option value="processeddata/721035 - Reservoir Road - Barnt Green.csv">721035 - Reservoir Road - Barnt Green.csv</options>
+            <option value="processeddata/721187 - REDBROOKS - HILLFIELD SOLIHULL.csv">721187 - REDBROOKS - HILLFIELD SOLIHULL.csv</options>
+            <option value="processeddata/721372 - Warren Lane, Lickey Square - Barnt Green.csv">721372 - Warren Lane, Lickey Square - Barnt Green.csv</options>
+            <option value="processeddata/721416 - 41 LITTLE HARDWICK RD - ALDRIDGE.csv">721416 - 41 LITTLE HARDWICK RD - ALDRIDGE.csv</options>
+            <option value="processeddata/721448 - VERNON AVENUE - HANDSWORTHWOOD 50C1.csv">721448 - VERNON AVENUE - HANDSWORTHWOOD 50C1.csv</options>
+            <option value="processeddata/721676 - STATION RD - HARBORNE.csv">721676 - STATION RD - HARBORNE.csv</options>
+            <option value="processeddata/721683 - ANSTRUTHER RD - EDGBASTON.csv">721683 - ANSTRUTHER RD - EDGBASTON.csv</options>
+            <option value="processeddata/721747 - Monmouth Road West - Smethwick.csv">721747 - Monmouth Road West - Smethwick.csv</options>
+            <option value="processeddata/721767 - COURT OAK RD - HARBORNE.csv">721767 - COURT OAK RD - HARBORNE.csv</options>
+            <option value="processeddata/721810 - HOGARTH HOUSE.csv">721810 - HOGARTH HOUSE.csv</options>
+            <option value="processeddata/722039 - BANNERS GATE ROAD - NEW OSCOTT 411E.csv">722039 - BANNERS GATE ROAD - NEW OSCOTT 411E.csv</options>
+            <option value="processeddata/722466 - Middle Leaford - Stechford.csv">722466 - Middle Leaford - Stechford.csv</options>
+            <option value="processeddata/722468 - TURCHILL DRIVE - WALMLEY.csv">722468 - TURCHILL DRIVE - WALMLEY.csv</options>
+            <option value="processeddata/722486 - 7 WHITECROFT ROAD - SHELDON.csv">722486 - 7 WHITECROFT ROAD - SHELDON.csv</options>
+            <option value="processeddata/722549 - HIGHFIELD ROAD (EAST) - HALL GREEN.csv">722549 - HIGHFIELD ROAD (EAST) - HALL GREEN.csv</options>
+            <option value="processeddata/722578 - ALCOTT LANE - MARSTON GREEN.csv">722578 - ALCOTT LANE - MARSTON GREEN.csv</options>
+            <option value="processeddata/722712 - Hawksworth Crescent.csv">722712 - Hawksworth Crescent.csv</options>
+            <option value="processeddata/722739 - 20 DENHAM ROAD - YARDLEY.csv">722739 - 20 DENHAM ROAD - YARDLEY.csv</options>
+            <option value="processeddata/722936 - Berwicks Lane - Marston Green.csv">722936 - Berwicks Lane - Marston Green.csv</options>
+            <option value="processeddata/723003 - MARSTON GREEN HOSPITAL - MARSTON GREEN.csv">723003 - MARSTON GREEN HOSPITAL - MARSTON GREEN.csv</options>
+            <option value="processeddata/723349 - BROOK LANE - OLTON.csv">723349 - BROOK LANE - OLTON.csv</options>
+            <option value="processeddata/723577 - Aylesford Drive - Marston Green.csv">723577 - Aylesford Drive - Marston Green.csv</options>
+            <option value="processeddata/723621 - JOCKEY RD BRIDGE - BOLDMERE 41F2.csv">723621 - JOCKEY RD BRIDGE - BOLDMERE 41F2.csv</options>
+            <option value="processeddata/723879 - MARYLAND AVE - SHARD END 66B1.csv">723879 - MARYLAND AVE - SHARD END 66B1.csv</options>
+            <option value="processeddata/724023 - HARBORNE ROAD - EDGBASTON.csv">724023 - HARBORNE ROAD - EDGBASTON.csv</options>
+            <option value="processeddata/724025 - BERROW DRIVE - EDGBASTON.csv">724025 - BERROW DRIVE - EDGBASTON.csv</options>
+            <option value="processeddata/724095 - Balden Road - Quinton.csv">724095 - Balden Road - Quinton.csv</options>
+            <option value="processeddata/724128 - NURSERY ROAD - HARBORNE.csv">724128 - NURSERY ROAD - HARBORNE.csv</options>
+            <option value="processeddata/724253 - LEIGHAM DRIVE -.csv">724253 - LEIGHAM DRIVE -.csv</options>
+            <option value="processeddata/724274 - KNIGHTLOW ROAD - HARBORNE.csv">724274 - KNIGHTLOW ROAD - HARBORNE.csv</options>
+            <option value="processeddata/724374 - GREENFIELD CRESCENT - EDGBASTON.csv">724374 - GREENFIELD CRESCENT - EDGBASTON.csv</options>
+            <option value="processeddata/724700 - MEADOW ROAD - EDGBASTON.csv">724700 - MEADOW ROAD - EDGBASTON.csv</options>
+            <option value="processeddata/724706 - Augustus Road - Edgbaston.csv">724706 - Augustus Road - Edgbaston.csv</options>
+            <option value="processeddata/724812 - Pakenham Rd - Edgbaston.csv">724812 - Pakenham Rd - Edgbaston.csv</options>
+            <option value="processeddata/724813 - CHARLOTTE ROAD - EDGBASTON.csv">724813 - CHARLOTTE ROAD - EDGBASTON.csv</options>
+            <option value="processeddata/724814 - GILLHURST ROAD -.csv">724814 - GILLHURST ROAD -.csv</options>
+            <option value="processeddata/730202 - 55 MILESTONE DRIVE - WEST HAGLEY.csv">730202 - 55 MILESTONE DRIVE - WEST HAGLEY.csv</options>
+            <option value="processeddata/730234 - HARTLE LANE - BELBROUGHTON.csv">730234 - HARTLE LANE - BELBROUGHTON.csv</options>
+            <option value="processeddata/730238 - CAVENDISH DRIVE - WEST HAGLEY.csv">730238 - CAVENDISH DRIVE - WEST HAGLEY.csv</options>
+            <option value="processeddata/730499 - BEDINGSTONE DRIVE - PENKRIDGE.csv">730499 - BEDINGSTONE DRIVE - PENKRIDGE.csv</options>
+            <option value="processeddata/730719 - MELLISH ROAD - WALSALL.csv">730719 - MELLISH ROAD - WALSALL.csv</options>
+            <option value="processeddata/730789 - RICHARD RD - WALSALL.csv">730789 - RICHARD RD - WALSALL.csv</options>
+            <option value="processeddata/730844 - PEAR TREE DRIVE - GREAT BARR.csv">730844 - PEAR TREE DRIVE - GREAT BARR.csv</options>
+            <option value="processeddata/730870 - FERNLEIGH ROAD - WALSALL.csv">730870 - FERNLEIGH ROAD - WALSALL.csv</options>
+            <option value="processeddata/730873 - PRINCESS AVENUE - WALSALL.csv">730873 - PRINCESS AVENUE - WALSALL.csv</options>
+            <option value="processeddata/731018 - GREENACRES - SHELFIELD.csv">731018 - GREENACRES - SHELFIELD.csv</options>
+            <option value="processeddata/731054 - ST MODWENA WAY - PENKRIDGE.csv">731054 - ST MODWENA WAY - PENKRIDGE.csv</options>
+        </select>
+        <p>We found data for 50 substations across the NGED distribution area from <a href="https://opennetzero.org/dataset/lv-load-monitor-data">this source</a>. You might find the location of this substation at <span id="substation-URL"></span></p>
+    </div>
+    <div>
+        <label for="description"><b>Select which cable:</b></label>
         <select id="description">
             <!-- Description options will be populated dynamically -->
         </select>
+        <p>Each substation has a busbar (piece of metal) with 1 - 5 feeder cables bolted on to it. Each feeder cable has 3 phases (wires) inside it (called L1, L2, or L3), and runs down the street. Most houses are connected to 1 phase only.</p>
     </div>
-    <div id="values">
-        <span id="average"></span>
-        <span id="upper-quartile"></span>
-        <span id="future-average"></span>
-        <span id="peak-value"></span>
+    <div>
+        <h2>So what?</h2>
+        <p>This data makes it clear that designing a distribution network for peak capacity is highly inefficient, and we need to start shifting the time that we consume electricity.</p>
+        <p>Load-shifting comes with the cost of installing the hardware to control our EVs and our space and water heaters, and the software to respond to LV transformer meter readings. There's likely also a cost of incentivising consumers to allow their heaters to turn down as the load nears peak.</p>
+        <p>All these costs combined need to outweigh the cost of installing new transformers and cables, which is the recommended further work from this analysis.</p>
     </div>
-    <div class="chart" id="chart"></div>
-    <div class="chart" id="chart"></div>
 
-    <script>
-        const csvFileSelector = document.getElementById("csvFile");
-        const descriptionSelector = document.getElementById("description");
-
-        function readAndDrawChart(csvFileName, description) {
-            d3.csv(csvFileName).then(data => {
-                data = data.filter(d => d["Description"] === description);
-
-                data.forEach(d => {
-                    d.timestamp = d3.timeParse("%Y-%m-%d %H:%M:%S")(d.timestamp);
-                    d.original_values = +d.original_values;
-                    d.average_original = +d.average_original;
-                    d.upper_quartile_original = +d.upper_quartile_original;
-                    d.future_values = +d.future_values;
-                    d.average_future = +d.average_future;
-                    d.worst_case = +d.worst_case;
-                    
-                });
-
-                drawChart(data);
-            });
-        }
-
-        function drawChart(data) {
-            d3.select("#chart").html("");
-
-            const margin = { top: 20, right: 20, bottom: 30, left: 50 };
-            const width = 960 - margin.left - margin.right;
-            const height = 500 - margin.top - margin.bottom;
-
-            const x = d3.scaleTime().range([0, width]);
-            const y = d3.scaleLinear().range([height, 0]);
-
-            const lineOriginalValues = d3.line()
-                .x(d => x(d.timestamp))
-                .y(d => y(d.original_values));
-
-            const lineAverageOriginal = d3.line()
-                .x(d => x(d.timestamp))
-                .y(d => y(d.average_original));
-
-            const lineAverageUpperQuartileOriginal = d3.line()
-                .x(d => x(d.timestamp))
-                .y(d => y(d.upper_quartile_original));
-
-            const lineFuture = d3.line()
-                .x(d => x(d.timestamp))
-                .y(d => y(d.future_values));
-                
-            const lineAverageFuture = d3.line()
-                .x(d => x(d.timestamp))
-                .y(d => y(d.average_future));
-
-            const lineWorsCase = d3.line()
-                .x(d => x(d.timestamp))
-                .y(d => y(d.worst_case));
-
-            const svg = d3.select("#chart")
-                .append("svg")
-                .attr("width", width + margin.left + margin.right)
-                .attr("height", height + margin.top + margin.bottom)
-                .append("g")
-                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-            x.domain(d3.extent(data, d => d.timestamp));
-            y.domain([0, d3.max(data, d => Math.max(d.original_values, d.average_original, d.upper_quartile_original, d.future_values, d.average_future, d.worst_case))]);
-            
-            svg.append("g")
-                .attr("transform", "translate(0," + height + ")")
-                .call(d3.axisBottom(x));
-
-            svg.append("g")
-                .call(d3.axisLeft(y));
-            
-            const areaOriginalValues = d3.area()
-                .x(d => x(d.timestamp))
-                .y0(y(0))
-                .y1(d => y(d.original_values));
-
-            const areaAverageOriginal = d3.area()
-                .x(d => x(d.timestamp))
-                .y0(y(0))
-                .y1(d => y(d.average_original));
-
-            const areaAverageUpperQuartileOriginal = d3.area()
-                .x(d => x(d.timestamp))
-                .y0(y(0))
-                .y1(d => y(d.upper_quartile_original));
-
-            const areaFuture = d3.area()
-                .x(d => x(d.timestamp))
-                .y0(y(0))
-                .y1(d => y(d.future_values));
-
-            const areaAverageFuture = d3.area()
-                .x(d => x(d.timestamp))
-                .y0(y(0))
-                .y1(d => y(d.average_future));
-
-            const areaWorstCase = d3.area()
-                .x(d => x(d.timestamp))
-                .y0(y(0))
-                .y1(d => y(d.worst_case));
-
-            svg.append("path")
-                .datum(data)
-                .attr("fill", "rgba(70, 130, 180, 0.6)")
-                .attr("stroke", "steelblue")
-                .attr("stroke-width", 0.5)
-                .attr("d", areaOriginalValues);
-
-            svg.append("path")
-                .datum(data)
-                .attr("fill", "none")
-                .attr("stroke", "steelblue")
-                .attr("stroke-width", 1)
-                .attr("d", areaAverageOriginal);
-
-            svg.append("path")
-                .datum(data)
-                .attr("fill", "none")
-                .attr("stroke", "steelblue")
-                .attr("stroke-width", 0.5)
-                .attr("d", areaAverageUpperQuartileOriginal);
-
-            svg.append("path")
-                .datum(data)
-                .attr("fill", "rgba(70, 130, 180, 0.2)")
-                .attr("stroke", "green")
-                .attr("stroke-width", 0.5)
-                .attr("d", areaFuture);
-
-            svg.append("path")
-                .datum(data)
-                .attr("fill", "none")
-                .attr("stroke", "green")
-                .attr("stroke-width", 0.5)
-                .attr("d", areaAverageFuture);
-
-            svg.append("path")
-                .datum(data)
-                .attr("fill", "none")
-                .attr("stroke", "orange")
-                .attr("stroke-width", 0.5)
-                .attr("d", areaWorstCase);
-
-                const averageValue = d3.mean(data, d => d.average_original).toFixed(2);
-                const upperQuartileValue = d3.quantile(data, 0.75, d => d.upper_quartile_original).toFixed(2);
-                const futureAverageValue = d3.mean(data, d => d.average_future).toFixed(2);
-                const peakValue = d3.max(data, d => d.future_values).toFixed(2);
-
-                document.getElementById("average").textContent = "Average: " + averageValue;
-                document.getElementById("upper-quartile").textContent = "Upper Quartile: " + upperQuartileValue;
-                document.getElementById("future-average").textContent = "Future Average: " + futureAverageValue;
-                document.getElementById("peak-value").textContent = "Peak Value: " + peakValue;
-        }
-
-        function updateDescriptionOptions(csvFileName) {
-            d3.csv(csvFileName).then(data => {
-                const descriptions = [...new Set(data.map(d => d["Description"]))];
-                descriptionSelector.innerHTML = "";
-
-                descriptions.forEach(desc => {
-                    const option = document.createElement("option");
-                    option.value = desc;
-                    option.textContent = desc;
-                    descriptionSelector.appendChild(option);
-                });
-
-                readAndDrawChart(csvFileName, descriptions[0]);
-            });
-        }
-
-        csvFileSelector.addEventListener("change", () => {
-            updateDescriptionOptions(csvFileSelector.value);
-        });
-
-        descriptionSelector.addEventListener("change", () => {
-            readAndDrawChart(csvFileSelector.value, descriptionSelector.value);
-        });
-
-        updateDescriptionOptions(csvFileSelector.value);
-    </script>
+    <script src="chart.js"></script>
 </body>
 </html>
