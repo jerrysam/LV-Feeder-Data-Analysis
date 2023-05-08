@@ -26,8 +26,7 @@ function drawChart(data, transformer) {
     const width = Math.min(960, window.innerWidth) - margin.left - margin.right;
     const height = 500 - margin.top - margin.bottom;
     
-    const svg = d3.select("#chart")
-        .append("svg")
+    const svg = d3.select("#chart").append("svg")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
         .append("g")
@@ -36,11 +35,8 @@ function drawChart(data, transformer) {
     // Create axes, labels, and title
     const x = d3.scaleTime().range([0, width]);
     const y = d3.scaleLinear().range([height, 0]);
-    svg.append("g")
-        .attr("transform", "translate(0," + height + ")")
-        .call(d3.axisBottom(x));
-    svg.append("g")
-        .call(d3.axisLeft(y));
+    svg.append("g").attr("transform", "translate(0," + height + ")").call(d3.axisBottom(x));
+    svg.append("g").call(d3.axisLeft(y));
 
     x.domain(d3.extent(data, d => d.timestamp));
     y.domain([0, d3.max(data, d => Math.max(d.original_values, d.average_original, d.upper_quartile_original, d.future_values, d.average_future, d.worst_case))]);
@@ -48,38 +44,26 @@ function drawChart(data, transformer) {
     // Add x-axis label
     svg.append("text")
         .attr("transform", "translate(" + (width / 2) + " ," + (height + margin.top + 10) + ")")
-        .style("text-anchor", "middle")
-        .text("Time (7-day period, where available)");
+        .text("Time (7-day period, where available)").style("text-anchor", "middle");
 
     // Add y-axis label
     svg.append("text")
-        .attr("transform", "rotate(-90)")
-        .attr("y", 0 - margin.left)
-        .attr("x",0 - (height / 2))
-        .attr("dy", "1em")
-        .style("text-anchor", "middle")
-        .text("Load, kW");
+        .attr("y", 0 - margin.left).attr("x",0 - (height / 2))
+        .attr("dy", "1em").attr("transform", "rotate(-90)")
+        .text("Load, kW").style("text-anchor", "middle");
     
     // Add the chart title
     svg.append("text")
-        .attr("x", (width / 2))
-        .attr("y", 0 - (margin.top / 2))
-        .attr("text-anchor", "middle")
-        .style("font-size", "1.17em")
-        .html("Load profile for " + transformer);
+        .attr("x", (width / 2)).attr("y", 0 - (margin.top / 2))
+        .html("Load profile for " + transformer).style("font-size", "1.17em").attr("text-anchor", "middle");
 
     // Add maps link
-    const location = '721032 - Lickey Coppice - Barnt Green.csv';
-    const locationName = location.split(' - ')[1].split('.')[0];
+    const locationName = transformer.slice(transformer.indexOf(' - ') + 3);
     const mapsUrl = `https://maps.google.com/maps?q=${encodeURIComponent(locationName)}`;
     document.getElementById("substation-URL").innerHTML = "<a href=\"" + mapsUrl + "\" target=\"blank\">" + transformer + "</a>";
 
 
     // Draw 3 lines
-    const WorstCase = d3.area()
-        .x(d => x(d.timestamp))
-        .y0(y(0))
-        .y1(d => y(d.worst_case));
     svg.append("path")
         .datum(data)
         .attr("id", "WorstCase")
@@ -87,12 +71,11 @@ function drawChart(data, transformer) {
         .attr("fill", "rgba(255, 165, 0, 0.1)")
         .attr("stroke", "orange")
         .attr("stroke-width", 0.5)
-        .attr("d", WorstCase);
+        .attr("d", d3.area()
+            .x(d => x(d.timestamp))
+            .y0(y(0))
+            .y1(d => y(d.worst_case)));
 
-    const Future = d3.area()
-        .x(d => x(d.timestamp))
-        .y0(y(0))
-        .y1(d => y(d.future_values));
     svg.append("path")
         .datum(data)
         .attr("id", "Future")
@@ -100,12 +83,11 @@ function drawChart(data, transformer) {
         .attr("fill", "rgba(70, 130, 180, 0.2)")
         .attr("stroke", "green")
         .attr("stroke-width", 0.5)
-        .attr("d", Future);
+        .attr("d", d3.area()
+            .x(d => x(d.timestamp))
+            .y0(y(0))
+            .y1(d => y(d.future_values)));
     
-    const OriginalValues = d3.area()
-        .x(d => x(d.timestamp))
-        .y0(y(0))
-        .y1(d => y(d.original_values));
     svg.append("path")
         .datum(data)
         .attr("id", "OriginalValues")
@@ -113,12 +95,12 @@ function drawChart(data, transformer) {
         .attr("fill", "rgba(70, 130, 180, 0.6)")
         .attr("stroke", "steelblue")
         .attr("stroke-width", "0.8")
-        .attr("d", OriginalValues);
+        .attr("d", d3.area()
+            .x(d => x(d.timestamp))
+            .y0(y(0))
+            .y1(d => y(d.original_values)));
 
     // Add in the horizontal average and upper quartile lines
-    const AverageFuture = d3.area()
-        .x(d => x(d.timestamp))
-        .y(d => y(d.average_future));
     svg.append("path")
         .datum(data)
         .attr("id", "AverageFuture")
@@ -126,11 +108,10 @@ function drawChart(data, transformer) {
         .attr("fill", "none")
         .attr("stroke", "green")
         .attr("stroke-width", 1.5)
-        .attr("d", AverageFuture);
+        .attr("d", d3.area()
+            .x(d => x(d.timestamp))
+            .y(d => y(d.average_future)));
 
-    const AverageOriginal = d3.area()
-        .x(d => x(d.timestamp))
-        .y(d => y(d.average_original));
     svg.append("path")
         .datum(data)
         .attr("id", "AverageOriginal")
@@ -138,11 +119,10 @@ function drawChart(data, transformer) {
         .attr("fill", "none")
         .attr("stroke", "steelblue")
         .attr("stroke-width", 1.5)
-        .attr("d", AverageOriginal);
+        .attr("d", d3.area()
+            .x(d => x(d.timestamp))
+            .y(d => y(d.average_original)));
 
-    const AverageUpperQuartileOriginal = d3.area()
-        .x(d => x(d.timestamp))
-        .y(d => y(d.upper_quartile_original));
     svg.append("path")
         .datum(data)
         .attr("id", "AverageUpperQuartileOriginal")
@@ -150,13 +130,15 @@ function drawChart(data, transformer) {
         .attr("fill", "none")
         .attr("stroke", "steelblue")
         .attr("stroke-width", 1.5)
-        .attr("d", AverageUpperQuartileOriginal);
+        .attr("d", d3.area()
+            .x(d => x(d.timestamp))
+            .y(d => y(d.upper_quartile_original)));
 
     // Tooltip code
-    const averageValue = d3.mean(data, d => d.average_original).toFixed(2);
-    const upperQuartileValue = d3.quantile(data, 0.75, d => d.upper_quartile_original).toFixed(2);
-    const futureAverageValue = d3.mean(data, d => d.average_future).toFixed(2);
-    const peakValue = d3.max(data, d => d.future_values).toFixed(2);
+    const averageValue = data[0].average_original.toFixed(2);
+    const upperQuartileValue = data[0].upper_quartile_original.toFixed(2);
+    const futureAverageValue = data[0].average_future.toFixed(2);
+    const peakValue = d3.max(data, d => d.original_values).toFixed(2);
     const peakValue_worst = d3.max(data, d => d.worst_case).toFixed(2);
 
     var tooltip = d3.select("#chart")
@@ -177,7 +159,6 @@ function drawChart(data, transformer) {
         })
         .on("mousemove", function() {
             const rect = chart.getBoundingClientRect();
-            console.log(rect, event.pageY, event.pageY - rect.top);
             tooltip.style("top", (event.pageY - rect.top - scrollY - 50) + "px").style("left", (event.pageX - rect.x + 20) + "px");
             if (this.id === "OriginalValues") {
                 tooltip.html("<b>Todays load profile:</b> The one-week load profile of an 11kv transformer in the UK. They have about 50 houses connected to them, with a range of 3 - 300 houses.<br/><b>Average load:" + averageValue + "kW<br/>Peak load: " + peakValue + "kW</b>");
@@ -201,7 +182,6 @@ function drawChart(data, transformer) {
 // Populate the different cable options:
 const csvFileSelector = document.getElementById("csvFile");
 const descriptionSelector = document.getElementById("description");
-
 
 function updateDescriptionOptions(csvFileName) {
     d3.csv(csvFileName).then(data => {

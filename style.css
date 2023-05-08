@@ -21,3 +21,9 @@ body > div {
 h1, h2 {
     font-weight: 500;
 }
+
+img {
+    max-width: 70%;
+    margin: 40px auto;
+    display: block;
+}
