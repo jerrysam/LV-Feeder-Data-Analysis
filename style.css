@@ -1,0 +1,23 @@
+body {
+    width: 960px;
+    max-width: 100%;
+    margin: auto;
+    font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+}
+
+body > div {
+        padding: 5px 50px;
+}
+
+.chart {
+    display: inline-block;
+    position: relative;
+    width: 100%;
+    padding: 20px 0;
+    vertical-align: middle;
+    overflow: hidden;
+}
+
+h1, h2 {
+    font-weight: 500;
+}
