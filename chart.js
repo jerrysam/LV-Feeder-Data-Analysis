@@ -35,11 +35,10 @@ function drawChart(data, transformer) {
     // Create axes, labels, and title
     const x = d3.scaleTime().range([0, width]);
     const y = d3.scaleLinear().range([height, 0]);
-    svg.append("g").attr("transform", "translate(0," + height + ")").call(d3.axisBottom(x));
-    svg.append("g").call(d3.axisLeft(y));
-
     x.domain(d3.extent(data, d => d.timestamp));
     y.domain([0, d3.max(data, d => Math.max(d.original_values, d.average_original, d.upper_quartile_original, d.future_values, d.average_future, d.worst_case))]);
+    svg.append("g").attr("transform", "translate(0," + height + ")").call(d3.axisBottom(x));
+    svg.append("g").call(d3.axisLeft(y));
     
     // Add x-axis label
     svg.append("text")
